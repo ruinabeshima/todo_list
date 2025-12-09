@@ -1,11 +1,11 @@
 import './App.css'
-import Register from './components/register'
+import routes from './routes'
 
 function App() {
 
   return (
     <>
-      <Register />
+      {routes}
     </>
   )
 }
