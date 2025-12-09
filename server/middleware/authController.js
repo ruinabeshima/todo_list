@@ -1,4 +1,5 @@
 const db = require("../db/queries.js");
+const bcrypt = require("bcrypt");
 
 async function RegisterUser(req, res) {
   try {
@@ -25,6 +26,16 @@ async function RegisterUser(req, res) {
       return res.status(400).json({ message: "Password is too short" });
     }
 
+    // Hash password and add to database
+    const hashPassword = await bcrypt.hash(password, 10);
+    const result = await db.insertUser(username, hashPassword);
+    return res.status(201).json({
+      message: "User created successfully",
+      user: {
+        id: result.id,
+        username: result.username,
+      },
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
