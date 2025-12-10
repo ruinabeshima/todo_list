@@ -1,7 +1,7 @@
 const db = require("../db/queries.js");
 const bcrypt = require("bcrypt");
 
-async function RegisterUser(req, res) {
+async function registerUser(req, res) {
   try {
     const { username, password, password2 } = req.body;
 
@@ -42,4 +42,26 @@ async function RegisterUser(req, res) {
   }
 }
 
-module.exports = { RegisterUser };
+async function loginUser(req, res) {
+  try {
+    const { username, password } = req.body;
+
+    // Check if account exists
+    const user = await db.getUser(username);
+    if (!user) {
+      return res.status(404).json({ message: "User account does not exist" });
+    }
+
+    // Compare passwords
+    const match = await bcrypt.compare(password, user.password)
+    if (!match) {
+      return res.status(401).json({ message: "Password does not match" });
+    }
+
+    return res.status(201).json({ message: "User logged in" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+module.exports = { registerUser, loginUser };
