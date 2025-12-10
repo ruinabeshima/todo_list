@@ -1,13 +1,38 @@
 import { useState } from "react";
 import styles from "../styles/login.module.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
+    // Prevent refresh
     event.preventDefault();
-    console.log("Form submitted!")
+
+    // Send POST requst to /auth/login
+    const response = await fetch("http://localhost:8080/auth/login", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    });
+
+    // Handle response
+    const data = await response.json();
+    if (!response.ok) {
+      console.log("Login failed: ", data.error);
+      return;
+    }
+
+    console.log("Login succeeded");
+    navigate("/register");
   };
 
   return (

@@ -51,13 +51,13 @@ async function loginUser(req, res) {
     // Check if account exists
     const user = await db.getUser(username);
     if (!user) {
-      return res.status(404).json({ message: "User account does not exist" });
+      return res.status(404).json({ error: "User account does not exist" });
     }
 
     // Compare passwords
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      return res.status(401).json({ message: "Password does not match" });
+      return res.status(401).json({ error: "Password does not match" });
     }
 
     // Create JSON Web Token
@@ -71,6 +71,8 @@ async function loginUser(req, res) {
     // Send cookie
     res.cookie("token", token, {
       httpOnly: true,
+      sameSite: "lax",
+      secure: false,
     });
 
     return res.status(200).json({
@@ -81,7 +83,7 @@ async function loginUser(req, res) {
       },
     });
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 }
 

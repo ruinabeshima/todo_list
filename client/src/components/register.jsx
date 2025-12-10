@@ -11,10 +11,6 @@ export default function Register() {
     event.preventDefault();
 
     async function handleData() {
-      // Debug
-      console.log(
-        `Form submitted with values ${username}, ${password}, ${password2}`
-      );
 
       try {
         const response = await fetch("http://localhost:8080/auth/register", {
