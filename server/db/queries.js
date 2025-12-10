@@ -15,4 +15,4 @@ async function insertUser(username, password) {
   return result.rows[0];
 }
 
-module.exports = { getUser, insertUser };
+module.exports = { insertUser, getUser };

@@ -1,5 +1,7 @@
 const db = require("../db/queries.js");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 async function registerUser(req, res) {
   try {
@@ -53,12 +55,27 @@ async function loginUser(req, res) {
     }
 
     // Compare passwords
-    const match = await bcrypt.compare(password, user.password)
+    const match = await bcrypt.compare(password, user.password);
     if (!match) {
       return res.status(401).json({ message: "Password does not match" });
     }
 
-    return res.status(201).json({ message: "User logged in" });
+    // Create JSON Web Token
+    const options = { expiresIn: "1h" };
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET_KEY,
+      options
+    );
+
+    return res.status(200).json({
+      message: "User logged in",
+      token: token,
+      user: {
+        id: user.id,
+        username: user.username,
+      },
+    });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }
