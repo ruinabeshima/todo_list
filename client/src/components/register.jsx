@@ -1,45 +1,40 @@
 import { useState } from "react";
 import styles from "../styles/register.module.css";
+import { useNavigate } from "react-router";
 
 export default function Register() {
-  const [errorMessage, setErrorMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
+  const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
+    // Prevent refresh
     event.preventDefault();
 
-    async function handleData() {
+    // Send POST request to /auth/register
+    const response = await fetch("http://localhost:8080/auth/register", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+        password2,
+      }),
+    });
 
-      try {
-        const response = await fetch("http://localhost:8080/auth/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: username,
-            password: password,
-            password2: password2,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Reponse status = ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log(data);
-      } catch (error) {
-        setErrorMessage(error.message);
-
-        //Debug
-        console.log(error.message);
-      }
+    // Handle response 
+    const data = await response.json() 
+    if (!response.ok){
+      console.log("Register failed: ", data.error)
+      return; 
     }
 
-    handleData();
+    console.log("Register succeeded")
+    navigate("/login")
   };
 
   return (
@@ -81,8 +76,6 @@ export default function Register() {
           className={styles.input}
         ></input>
         <input type="submit" value="Register"></input>
-
-        {errorMessage && <p>{errorMessage}</p>}
       </form>
     </>
   );
