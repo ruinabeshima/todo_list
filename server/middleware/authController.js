@@ -63,14 +63,18 @@ async function loginUser(req, res) {
     // Create JSON Web Token
     const options = { expiresIn: "1h" };
     const token = jwt.sign(
-      { id: user.id, username: user.username },
+      { userId: user.id, username: user.username },
       process.env.JWT_SECRET_KEY,
       options
     );
 
+    // Send cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+    });
+
     return res.status(200).json({
       message: "User logged in",
-      token: token,
       user: {
         id: user.id,
         username: user.username,
@@ -81,4 +85,25 @@ async function loginUser(req, res) {
   }
 }
 
-module.exports = { registerUser, loginUser };
+// Middlware to authenticate the JWT token
+function authenticateToken(req, res, next) {
+  try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      // 401 error for a mismatching token
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.clearCookie("token");
+
+    // 400 Error for an invalid token
+    return res.status(400).json({ error: "Invalid token" });
+  }
+}
+
+module.exports = { registerUser, loginUser, authenticateToken };
