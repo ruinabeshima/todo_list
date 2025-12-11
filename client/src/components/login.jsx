@@ -11,28 +11,35 @@ export default function Login() {
     // Prevent refresh
     event.preventDefault();
 
-    // Send POST requst to /auth/login
-    const response = await fetch("http://localhost:8080/auth/login", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
+    try {
+      // Send POST requst to /auth/login
+      const response = await fetch("http://localhost:8080/auth/login", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
 
-    // Handle response
-    const data = await response.json();
-    if (!response.ok) {
-      console.log("Login failed: ", data.error);
-      return;
+      // Handle response
+      if (!response.ok) {
+        const data = await response.json();
+        console.log("Login failed: ", data.error);
+        return;
+      }
+
+      const data = await response.json();
+      console.log("Login succeeded", data);
+
+      // Navigate to dashboard after successful login
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login error: ", error);
     }
-
-    console.log("Login succeeded");
-    navigate("/register");
   };
 
   return (
