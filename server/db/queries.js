@@ -15,4 +15,12 @@ async function insertUser(username, password) {
   return result.rows[0];
 }
 
-module.exports = { insertUser, getUser };
+async function insertTodo(user_id, title, description, priority) {
+  const result = await pool.query(
+    "INSERT INTO todo (user_id, title, description, priority) VALUES($1, $2, $3, $4) RETURNING note_id, user_id, date_created",
+    [user_id, title, description, priority]
+  );
+  return result.rows[0];
+}
+
+module.exports = { insertUser, getUser, insertTodo };
