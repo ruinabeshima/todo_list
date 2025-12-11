@@ -73,6 +73,7 @@ async function loginUser(req, res) {
       httpOnly: true,
       sameSite: "lax",
       secure: false,
+      path: "/",
     });
 
     return res.status(200).json({
@@ -101,10 +102,15 @@ function authenticateToken(req, res, next) {
     req.user = decoded;
     next();
   } catch (error) {
-    res.clearCookie("token");
+    res.clearCookie("token", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false,
+      path: "/",
+    });
 
-    // 400 Error for an invalid token
-    return res.status(400).json({ error: "Invalid token" });
+    // 401 Error for an invalid token
+    return res.status(401).json({ error: "Invalid token" });
   }
 }
 
