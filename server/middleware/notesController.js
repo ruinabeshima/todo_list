@@ -35,4 +35,21 @@ async function addNote(req, res) {
   }
 }
 
-module.exports = { addNote };
+async function showNotes(req, res) {
+  const user = req.user;
+  if (!user) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+  try {
+    const todos = await db.getTodos(user.userId);
+    return res
+      .status(200)
+      .json({ message: "Todos successfully obtained", todos });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+module.exports = { addNote, showNotes };

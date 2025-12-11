@@ -23,4 +23,22 @@ async function insertTodo(user_id, title, description, priority) {
   return result.rows[0];
 }
 
-module.exports = { insertUser, getUser, insertTodo };
+async function getTodos(user_id) {
+  const result = await pool.query(
+    `SELECT
+       todo_id,
+       user_id,
+       title,
+       description,
+       priority,
+       is_completed,
+       date_created
+     FROM todo
+     WHERE user_id = $1
+     ORDER BY priority DESC, date_created DESC`,
+    [user_id]
+  );
+  return result.rows;
+}
+
+module.exports = { insertUser, getUser, insertTodo, getTodos };
