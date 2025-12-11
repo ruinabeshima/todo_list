@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function Dashboard() {
   return (
     <>
       <h1>Dashboard</h1>
-      <button>Add a Note</button>
+      <Link to="/add">Add</Link>
     </>
   );
 }
