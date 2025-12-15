@@ -52,7 +52,6 @@ async function showIncompleteNotes(req, res) {
   }
 }
 
-
 async function showCompleteNotes(req, res) {
   const user = req.user;
   if (!user) {
@@ -70,4 +69,40 @@ async function showCompleteNotes(req, res) {
   }
 }
 
-module.exports = { addNote, showIncompleteNotes, showCompleteNotes };
+async function updateTodoCompletion(req, res) {
+  const user = req.user;
+
+  if (!user) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+  try {
+    const { todo_id, is_completed } = req.body;
+
+    if (todo_id === undefined || is_completed === undefined) {
+      return res
+        .status(400)
+        .json({ message: "Missing todo_id or is_completed" });
+    }
+
+    const updatedTodo = await db.updateTodo(todo_id, user.userId, is_completed);
+
+    if (!updatedTodo) {
+      return res.status(404).json({ message: "Todo not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Todo updated successfully", todo: updatedTodo });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+module.exports = {
+  addNote,
+  showIncompleteNotes,
+  showCompleteNotes,
+  updateTodoCompletion,
+};

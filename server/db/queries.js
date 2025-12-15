@@ -39,5 +39,19 @@ async function getCompleteTodos(user_id) {
   return result.rows;
 }
 
+async function updateTodo(todo_id, user_id, is_completed) {
+  const result = await pool.query(
+    "UPDATE todo SET is_completed = $1 WHERE todo_id = $2 AND user_id = $3 RETURNING todo_id, user_id, title, description, priority, is_completed, date_created",
+    [is_completed, todo_id, user_id]
+  );
+  return result.rows[0];
+}
 
-module.exports = { insertUser, getUser, insertTodo, getIncompleteTodos, getCompleteTodos };
+module.exports = {
+  insertUser,
+  getUser,
+  insertTodo,
+  getIncompleteTodos,
+  getCompleteTodos,
+  updateTodo,
+};

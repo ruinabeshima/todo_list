@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -10,12 +10,8 @@ export default function Dashboard() {
       <button onClick={() => setPage(1)}>Incomplete</button>
       <button onClick={() => setPage(2)}>Complete</button>
 
-      {page === 1 && (
-        <IncompleteNotes />
-      )}
-      {page === 2 && (
-        <CompleteNotes />
-      )}
+      {page === 1 && <IncompleteNotes />}
+      {page === 2 && <CompleteNotes />}
     </>
   );
 }
@@ -24,24 +20,51 @@ function IncompleteNotes() {
   const [incompleteNotes, setIncompleteNotes] = useState([]);
 
   const navigate = useNavigate();
-  useEffect(() => {
-    const handleData = async () => {
-      const response = await fetch("http://localhost:8080/notes/dashboard-incomplete", {
+  const fetchIncomplete = useCallback(async () => {
+    const response = await fetch(
+      "http://localhost:8080/notes/dashboard-incomplete",
+      {
         method: "GET",
         credentials: "include",
-      });
-
-      if (!response.ok) {
-        navigate("/login");
       }
+    );
 
-      const data = await response.json();
-      setIncompleteNotes(data.todos || []);
-      console.log(data);
-    };
+    if (!response.ok) {
+      navigate("/login");
+      return;
+    }
 
-    handleData();
+    const data = await response.json();
+    setIncompleteNotes(data.todos || []);
   }, [navigate]);
+
+  useEffect(() => {
+    fetchIncomplete();
+  }, [fetchIncomplete]);
+
+  const handleToggleCompletion = async (todo_id, currentStatus) => {
+    const response = await fetch(
+      "http://localhost:8080/notes/update-completion",
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          todo_id,
+          is_completed: !currentStatus,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Failed to update todo");
+      return;
+    }
+
+    await fetchIncomplete();
+  };
 
   return (
     <>
@@ -59,8 +82,9 @@ function IncompleteNotes() {
               <input
                 type="checkbox"
                 checked={note.is_completed || false}
-                onChange={() => {}}
-                readOnly
+                onChange={() =>
+                  handleToggleCompletion(note.todo_id, note.is_completed)
+                }
               />
               Completed?
             </label>
@@ -75,24 +99,51 @@ function CompleteNotes() {
   const [completeNotes, setCompleteNotes] = useState([]);
 
   const navigate = useNavigate();
-  useEffect(() => {
-    const handleData = async () => {
-      const response = await fetch("http://localhost:8080/notes/dashboard-complete", {
+  const fetchComplete = useCallback(async () => {
+    const response = await fetch(
+      "http://localhost:8080/notes/dashboard-complete",
+      {
         method: "GET",
         credentials: "include",
-      });
-
-      if (!response.ok) {
-        navigate("/login");
       }
+    );
 
-      const data = await response.json();
-      setCompleteNotes(data.todos || []);
-      console.log(data);
-    };
+    if (!response.ok) {
+      navigate("/login");
+      return;
+    }
 
-    handleData();
+    const data = await response.json();
+    setCompleteNotes(data.todos || []);
   }, [navigate]);
+
+  useEffect(() => {
+    fetchComplete();
+  }, [fetchComplete]);
+
+  const handleToggleCompletion = async (todo_id, currentStatus) => {
+    const response = await fetch(
+      "http://localhost:8080/notes/update-completion",
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          todo_id,
+          is_completed: !currentStatus,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Failed to update todo");
+      return;
+    }
+
+    await fetchComplete();
+  };
 
   return (
     <>
@@ -110,8 +161,9 @@ function CompleteNotes() {
               <input
                 type="checkbox"
                 checked={note.is_completed || false}
-                onChange={() => {}}
-                readOnly
+                onChange={() =>
+                  handleToggleCompletion(note.todo_id, note.is_completed)
+                }
               />
               Completed?
             </label>
