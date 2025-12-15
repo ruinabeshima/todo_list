@@ -20,6 +20,7 @@ function IncompleteNotes() {
   const [incompleteNotes, setIncompleteNotes] = useState([]);
 
   const navigate = useNavigate();
+
   const fetchIncomplete = useCallback(async () => {
     const response = await fetch(
       "http://localhost:8080/notes/dashboard-incomplete",
@@ -37,10 +38,6 @@ function IncompleteNotes() {
     const data = await response.json();
     setIncompleteNotes(data.todos || []);
   }, [navigate]);
-
-  useEffect(() => {
-    fetchIncomplete();
-  }, [fetchIncomplete]);
 
   const handleToggleCompletion = async (todo_id, currentStatus) => {
     const response = await fetch(
@@ -65,6 +62,13 @@ function IncompleteNotes() {
 
     await fetchIncomplete();
   };
+
+  useEffect(() => {
+    const run = async () => {
+      await fetchIncomplete();
+    };
+    run();
+  }, [fetchIncomplete, navigate]);
 
   return (
     <>
@@ -99,6 +103,7 @@ function CompleteNotes() {
   const [completeNotes, setCompleteNotes] = useState([]);
 
   const navigate = useNavigate();
+
   const fetchComplete = useCallback(async () => {
     const response = await fetch(
       "http://localhost:8080/notes/dashboard-complete",
@@ -116,10 +121,6 @@ function CompleteNotes() {
     const data = await response.json();
     setCompleteNotes(data.todos || []);
   }, [navigate]);
-
-  useEffect(() => {
-    fetchComplete();
-  }, [fetchComplete]);
 
   const handleToggleCompletion = async (todo_id, currentStatus) => {
     const response = await fetch(
@@ -144,6 +145,13 @@ function CompleteNotes() {
 
     await fetchComplete();
   };
+
+  useEffect(() => {
+    const run = async () => {
+      await fetchComplete();
+    };
+    run();
+  }, [fetchComplete, navigate]);
 
   return (
     <>
