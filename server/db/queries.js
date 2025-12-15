@@ -23,12 +23,21 @@ async function insertTodo(user_id, title, description, priority) {
   return result.rows[0];
 }
 
-async function getTodos(user_id) {
+async function getIncompleteTodos(user_id) {
   const result = await pool.query(
-    "SELECT todo_id, user_id, title, description, priority, is_completed, date_created FROM todo WHERE user_id = $1 ORDER BY priority DESC, date_created DESC",
+    "SELECT todo_id, user_id, title, description, priority, is_completed, date_created FROM todo WHERE user_id = $1 AND is_completed = false ORDER BY priority DESC, date_created DESC",
     [user_id]
   );
   return result.rows;
 }
 
-module.exports = { insertUser, getUser, insertTodo, getTodos };
+async function getCompleteTodos(user_id) {
+  const result = await pool.query(
+    "SELECT todo_id, user_id, title, description, priority, is_completed, date_created FROM todo WHERE user_id = $1 AND is_completed = true ORDER BY priority DESC, date_created DESC",
+    [user_id]
+  );
+  return result.rows;
+}
+
+
+module.exports = { insertUser, getUser, insertTodo, getIncompleteTodos, getCompleteTodos };

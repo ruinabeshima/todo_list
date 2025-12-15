@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const { authenticateToken } = require("../middleware/authController.js");
-const { addNote, showNotes } = require("../middleware/notesController.js");
+const { addNote, showIncompleteNotes, showCompleteNotes } = require("../middleware/notesController.js");
 
-router.get("/dashboard", authenticateToken, showNotes);
+router.get("/dashboard-incomplete", authenticateToken, showIncompleteNotes);
+router.get("/dashboard-complete", authenticateToken, showCompleteNotes);
 
 router.get("/add", authenticateToken, (req, res) => {
   return res.json({ message: "User logged in" });
