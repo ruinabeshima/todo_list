@@ -87,6 +87,12 @@ export default function Register() {
               className="input w-80"
             ></input>
           </div>
+          <p>
+            Already have an account?{" "}
+            <Link to="/login">
+              <a className="link link-secondary">Click me</a>
+            </Link>
+          </p>
           <div className="pt-5">
             <button className="btn btn-accent w-22" type="submit">
               Continue

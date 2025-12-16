@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -42,29 +43,57 @@ export default function Login() {
   };
 
   return (
-    <>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <label for="username">Username</label>
-        <input
-          type="text"
-          className={styles.input}
-          placeholder="Username"
-          id="username"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-        ></input>
-        <label for="password">Password</label>
-        <input
-          type="password"
-          className={styles.input}
-          placeholder="Password"
-          id="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-        ></input>
-        <input type="submit" value="Login" className={styles.submit}></input>
-      </form>
-    </>
+    <div className="h-screen w-screen flex flex-col items-center">
+      <div className="navbar">
+        <Link className=" btn btn-ghost text-xl" to="/">
+          ToDoInc
+        </Link>
+      </div>
+
+      <div>
+        <h1 className="text-3xl mt-10">Login</h1>
+      </div>
+
+      <div className="mt-10">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col items-center gap-5"
+        >
+          <div className="flex flex-col gap-1">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              placeholder="Username"
+              id="username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              className="input w-80"
+            ></input>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              placeholder="Password"
+              id="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              className="input w-80"
+            ></input>
+          </div>
+          <p>
+            Don't have an account? {" "}
+            <Link to="/register">
+              <a className="link link-secondary">Click me</a>
+            </Link>
+          </p>
+          <div className="pt-5">
+            <button className="btn btn-accent w-22" type="submit">
+              Login
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }
