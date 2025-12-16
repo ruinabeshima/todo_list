@@ -41,21 +41,22 @@ export default function Dashboard() {
         <button onClick={() => setPage(1)} className="btn btn-soft mr-2">
           Incomplete
         </button>
-        <button onClick={() => setPage(2)} className="btn btn-soft ml-2">
+        <button onClick={() => setPage(2)} className="btn btn-soft ml-2 mr-2">
           Complete
         </button>
+        <Link to="/add">
+          <button className="btn btn-secondary ml-2">+</button>
+        </Link>
       </div>
 
       {page === 1 && <IncompleteNotes />}
       {page === 2 && <CompleteNotes />}
-
     </div>
   );
 }
 
 function IncompleteNotes() {
   const [incompleteNotes, setIncompleteNotes] = useState([]);
-
   const navigate = useNavigate();
 
   const fetchIncomplete = useCallback(async () => {
@@ -107,36 +108,38 @@ function IncompleteNotes() {
     run();
   }, [fetchIncomplete, navigate]);
 
+  const listNotes = incompleteNotes.map((note) => {
+    return (
+      <div
+        key={note.todo_id}
+        className={`h-50 p-10 rounded-sm ${
+          note.priority === 3
+            ? "bg-red-100 text-red-900"
+            : note.priority === 2
+            ? "bg-yellow-100 text-yellow-900"
+            : note.priority === 1
+            ? "bg-green-100 text-green-900"
+            : ""
+        }`}
+      >
+        <p className="text-2xl">{note.title}</p>
+        <p>{note.description}</p>
+      </div>
+    );
+  });
+
   return (
     <>
-      <div></div>
-      {incompleteNotes.length === 0 ? (
-        <div className="w-4/5 mt-10">
-          <p>No todos yet. Add one to get started!</p>
-        </div>
-      ) : (
-        incompleteNotes.map((note) => (
-          <div key={note.todo_id}>
-            <h2>{note.title}</h2>
-            <p>{note.description}</p>
-            <p>Priority: {note.priority}</p>
-            <label>
-              <input
-                type="checkbox"
-                checked={note.is_completed || false}
-                onChange={() =>
-                  handleToggleCompletion(note.todo_id, note.is_completed)
-                }
-              />
-              Completed?
-            </label>
-          </div>
-          
-        ))
-      )}
-      <div className="w-4/5 mt-5">
+      <div className="w-4/5 mb-10">
+        {incompleteNotes.length === 0 ? (
+          <p>Create a todo!</p>
+        ) : (
+          <div className="grid grid-cols-3 gap-7 mt-10">{listNotes}</div>
+        )}
+      </div>
+      <div className="w-4/5 mb-10">
         <Link to="/add">
-          <button className="btn btn-secondary">+</button>
+          <button className="btn btn-secondary">Add a Task</button>
         </Link>
       </div>
     </>
