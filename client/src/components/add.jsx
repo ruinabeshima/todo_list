@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "../styles/add.module.css";
 
 export default function Add() {
   const navigate = useNavigate();
@@ -61,7 +60,7 @@ export default function Add() {
   return (
     <>
       <h1>Add Todo</h1>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <label htmlFor="title">Title</label>
         <input
           type="text"

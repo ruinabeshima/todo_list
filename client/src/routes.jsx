@@ -3,9 +3,11 @@ import Register from "./components/register";
 import Login from "./components/login";
 import Dashboard from "./components/dashboard";
 import Add from "./components/add";
+import Home from "./components/home";
 
 const routes = (
   <Routes>
+    <Route path="/" element={<Home />}></Route>
     <Route path="/register" element={<Register />}></Route>
     <Route path="/login" element={<Login />}></Route>
     <Route path="/dashboard" element={<Dashboard />}></Route>
