@@ -7,7 +7,7 @@ export default function Home() {
         <div className="flex-1">
           <a className="btn btn-ghost text-xl">ToDoInc</a>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-5">
           <label className="swap swap-rotate">
             {/* this hidden checkbox controls the state */}
             <input type="checkbox" />
@@ -30,10 +30,10 @@ export default function Home() {
             </svg>
           </label>
           <Link to="/register">
-            <button className="btn btn-primary">Sign Up</button>
+            <button className="btn btn-primary w-22">Sign Up</button>
           </Link>
           <Link to="/login">
-            <button className="btn btn-primary">Login</button>
+            <button className="btn btn-primary w-22">Login</button>
           </Link>
         </div>
       </div>
