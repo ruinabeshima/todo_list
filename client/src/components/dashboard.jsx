@@ -7,11 +7,11 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen w-screen flex flex-col items-center bg-base-100">
-      <div className="navbar bg-base-100 shadow-sm sticky top-0 z-2">
-        <div className="flex-1">
+      <nav className="navbar bg-base-100 shadow-sm sticky top-0 z-2">
+        <section className="flex-1">
           <a className="btn btn-ghost text-xl">ToDoInc</a>
-        </div>
-        <div className="flex gap-5">
+        </section>
+        <section className="flex gap-5">
           <label className="swap swap-rotate">
             {/* this hidden checkbox controls the state */}
             <input type="checkbox" />
@@ -34,19 +34,24 @@ export default function Dashboard() {
             </svg>
           </label>
           <button className="btn btn-primary w-22">Logout</button>
-        </div>
-      </div>
+        </section>
+      </nav>
 
-      <div className="w-4/5 mt-10">
-        <button onClick={() => setPage(1)} className="btn btn-soft mr-2">
+      <div role="tablist" className="tabs tabs-border mt-10">
+        <a
+          onClick={() => setPage(1)}
+          role="tab"
+          className={`tab ${page === 1 ? "tab-active" : ""}`}
+        >
           Incomplete
-        </button>
-        <button onClick={() => setPage(2)} className="btn btn-soft ml-2 mr-2">
+        </a>
+        <a
+          onClick={() => setPage(2)}
+          role="tab"
+          className={`tab ${page === 2 ? "tab-active" : ""}`}
+        >
           Complete
-        </button>
-        <Link to="/add">
-          <button className="btn btn-secondary ml-2">+</button>
-        </Link>
+        </a>
       </div>
 
       {page === 1 && <IncompleteNotes />}
@@ -201,9 +206,9 @@ function CompleteNotes() {
   }, [fetchComplete, navigate]);
 
   return (
-    <>
+    <section className="mt-10">
       {completeNotes.length === 0 ? (
-        <p>No todos yet. Add one to get started!</p>
+        <p>Completed tasks will appear here.</p>
       ) : (
         completeNotes.map((note) => (
           <div key={note.todo_id}>
@@ -223,6 +228,6 @@ function CompleteNotes() {
           </div>
         ))
       )}
-    </>
+    </section>
   );
 }
