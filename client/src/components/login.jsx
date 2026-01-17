@@ -82,7 +82,7 @@ export default function Login() {
             ></input>
           </div>
           <p>
-            Don't have an account? {" "}
+            Don't have an account?{" "}
             <Link to="/register">
               <a className="link link-secondary">Click me</a>
             </Link>
