@@ -65,7 +65,7 @@ function IncompleteNotes() {
       {
         method: "GET",
         credentials: "include",
-      }
+      },
     );
 
     if (!response.ok) {
@@ -90,7 +90,7 @@ function IncompleteNotes() {
           todo_id,
           is_completed: !currentStatus,
         }),
-      }
+      },
     );
 
     if (!response.ok) {
@@ -116,10 +116,10 @@ function IncompleteNotes() {
           note.priority === 3
             ? "bg-red-100 text-red-900"
             : note.priority === 2
-            ? "bg-yellow-100 text-yellow-900"
-            : note.priority === 1
-            ? "bg-green-100 text-green-900"
-            : ""
+              ? "bg-yellow-100 text-yellow-900"
+              : note.priority === 1
+                ? "bg-green-100 text-green-900"
+                : ""
         }`}
       >
         <p className="text-2xl">{note.title}</p>
@@ -157,7 +157,7 @@ function CompleteNotes() {
       {
         method: "GET",
         credentials: "include",
-      }
+      },
     );
 
     if (!response.ok) {
@@ -182,7 +182,7 @@ function CompleteNotes() {
           todo_id,
           is_completed: !currentStatus,
         }),
-      }
+      },
     );
 
     if (!response.ok) {
