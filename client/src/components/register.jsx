@@ -34,7 +34,7 @@ export default function Register() {
     }
 
     console.log("Register succeeded");
-    navigate("/login");
+    navigate("/dashboard");
   };
 
   return (
