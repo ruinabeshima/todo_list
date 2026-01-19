@@ -1,6 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { Trash2 } from "lucide-react";
+import { Check } from "lucide-react";
+import { Pen } from "lucide-react";
 
 export default function Dashboard() {
   const [page, setPage] = useState(1);
@@ -117,32 +120,43 @@ function IncompleteNotes() {
     return (
       <div
         key={note.todo_id}
-        className={`h-50 p-10 rounded-sm ${
+        className={`p-5 rounded-lg ${
           note.priority === 3
-            ? "bg-red-100 text-red-900"
+            ? "bg-red-100 text-red-400"
             : note.priority === 2
-              ? "bg-yellow-100 text-yellow-900"
+              ? "bg-yellow-100 text-yellow-400"
               : note.priority === 1
-                ? "bg-green-100 text-green-900"
+                ? "bg-green-100 text-green-100"
                 : ""
-        }`}
+        }}`}
       >
         <p className="text-2xl">{note.title}</p>
         <p>{note.description}</p>
+        <section className="mt-5 flex gap-3">
+          <button className="flex items-center justify-center rounded-2xl border border-black p-1 hover:cursor-pointer hover:bg-base-300">
+            <Trash2 />
+          </button>
+          <button className="flex items-center justify-center rounded-2xl border border-black p-1 hover:cursor-pointer hover:bg-base-300">
+            <Check />
+          </button>
+          <button className="flex items-center justify-center rounded-2xl border border-black p-1 hover:cursor-pointer hover:bg-base-300">
+            <Pen />
+          </button>
+        </section>
       </div>
     );
   });
 
   return (
     <>
-      <div className="w-4/5 mb-10">
+      <div className="w-4/5 mt-10 mb-5">
         {incompleteNotes.length === 0 ? (
           <p>Create a todo!</p>
         ) : (
-          <div className="grid grid-cols-3 gap-7 mt-10">{listNotes}</div>
+          <div className="mt-10 flex flex-col gap-7">{listNotes}</div>
         )}
       </div>
-      <div className="w-4/5 mb-10">
+      <div className="w-4/5 mt-10 mb-10">
         <Link to="/add">
           <button className="btn btn-secondary">Add a Task</button>
         </Link>
