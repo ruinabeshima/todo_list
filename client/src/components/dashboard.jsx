@@ -1,17 +1,20 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { Trash2 } from "lucide-react";
+import { Check } from "lucide-react";
+import { Pen } from "lucide-react";
 
 export default function Dashboard() {
   const [page, setPage] = useState(1);
 
   return (
     <div className="min-h-screen w-screen flex flex-col items-center bg-base-100">
-      <div className="navbar bg-base-100 shadow-sm sticky top-0 z-2">
-        <div className="flex-1">
+      <nav className="navbar bg-base-100 shadow-sm sticky top-0 z-2">
+        <section className="flex-1">
           <a className="btn btn-ghost text-xl">ToDoInc</a>
-        </div>
-        <div className="flex gap-5">
+        </section>
+        <section className="flex gap-5">
           <label className="swap swap-rotate">
             {/* this hidden checkbox controls the state */}
             <input type="checkbox" />
@@ -34,19 +37,24 @@ export default function Dashboard() {
             </svg>
           </label>
           <button className="btn btn-primary w-22">Logout</button>
-        </div>
-      </div>
+        </section>
+      </nav>
 
-      <div className="w-4/5 mt-10">
-        <button onClick={() => setPage(1)} className="btn btn-soft mr-2">
+      <div role="tablist" className="tabs tabs-border mt-10">
+        <a
+          onClick={() => setPage(1)}
+          role="tab"
+          className={`tab ${page === 1 ? "tab-active" : ""}`}
+        >
           Incomplete
-        </button>
-        <button onClick={() => setPage(2)} className="btn btn-soft ml-2 mr-2">
+        </a>
+        <a
+          onClick={() => setPage(2)}
+          role="tab"
+          className={`tab ${page === 2 ? "tab-active" : ""}`}
+        >
           Complete
-        </button>
-        <Link to="/add">
-          <button className="btn btn-secondary ml-2">+</button>
-        </Link>
+        </a>
       </div>
 
       {page === 1 && <IncompleteNotes />}
@@ -112,32 +120,43 @@ function IncompleteNotes() {
     return (
       <div
         key={note.todo_id}
-        className={`h-50 p-10 rounded-sm ${
+        className={`p-5 rounded-lg ${
           note.priority === 3
-            ? "bg-red-100 text-red-900"
+            ? "bg-red-100 text-red-400"
             : note.priority === 2
-              ? "bg-yellow-100 text-yellow-900"
+              ? "bg-yellow-100 text-yellow-400"
               : note.priority === 1
-                ? "bg-green-100 text-green-900"
+                ? "bg-green-100 text-green-100"
                 : ""
-        }`}
+        }}`}
       >
         <p className="text-2xl">{note.title}</p>
         <p>{note.description}</p>
+        <section className="mt-5 flex gap-3">
+          <button className="flex items-center justify-center rounded-2xl border border-black p-1 hover:cursor-pointer hover:bg-base-300">
+            <Trash2 />
+          </button>
+          <button className="flex items-center justify-center rounded-2xl border border-black p-1 hover:cursor-pointer hover:bg-base-300">
+            <Check />
+          </button>
+          <button className="flex items-center justify-center rounded-2xl border border-black p-1 hover:cursor-pointer hover:bg-base-300">
+            <Pen />
+          </button>
+        </section>
       </div>
     );
   });
 
   return (
     <>
-      <div className="w-4/5 mb-10">
+      <div className="w-4/5 mt-10 mb-5">
         {incompleteNotes.length === 0 ? (
           <p>Create a todo!</p>
         ) : (
-          <div className="grid grid-cols-3 gap-7 mt-10">{listNotes}</div>
+          <div className="mt-10 flex flex-col gap-7">{listNotes}</div>
         )}
       </div>
-      <div className="w-4/5 mb-10">
+      <div className="w-4/5 mt-10 mb-10">
         <Link to="/add">
           <button className="btn btn-secondary">Add a Task</button>
         </Link>
@@ -201,9 +220,9 @@ function CompleteNotes() {
   }, [fetchComplete, navigate]);
 
   return (
-    <>
+    <section className="mt-10">
       {completeNotes.length === 0 ? (
-        <p>No todos yet. Add one to get started!</p>
+        <p>Completed tasks will appear here.</p>
       ) : (
         completeNotes.map((note) => (
           <div key={note.todo_id}>
@@ -223,6 +242,6 @@ function CompleteNotes() {
           </div>
         ))
       )}
-    </>
+    </section>
   );
 }
